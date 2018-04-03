@@ -19,39 +19,26 @@ export default function() {
   function chord(matrix) {
     var n = matrix.length,
         groupSums = [],
-        groupIndex = range(n),
-        subgroupIndex = [],
         chords = [],
         groups = chords.groups = new Array(n),
-        subgroups = new Array(n * n),
+        subgroups = [],
         k,
         x,
         x0,
         dx,
         i,
+        p,
         j;
 
     // Compute the sum.
     k = 0, i = -1; while (++i < n) {
       x = 0, j = -1; while (++j < n) {
-        x += matrix[i][j];
+        for (p = 0; p < matrix[i][j].length; ++p)
+          x += matrix[i][j][p][1] - matrix[i][j][p][0];
       }
       groupSums.push(x);
-      subgroupIndex.push(range(n));
       k += x;
     }
-
-    // Sort groups…
-    if (sortGroups) groupIndex.sort(function(a, b) {
-      return sortGroups(groupSums[a], groupSums[b]);
-    });
-
-    // Sort subgroups…
-    if (sortSubgroups) subgroupIndex.forEach(function(d, i) {
-      d.sort(function(a, b) {
-        return sortSubgroups(matrix[i][a], matrix[i][b]);
-      });
-    });
 
     // Convert the sum to scaling factor for [0, 2pi].
     // TODO Allow start and end angle to be specified?
@@ -61,44 +48,54 @@ export default function() {
 
     // Compute the start and end angle for each group and subgroup.
     // Note: Opera has a bug reordering object literal properties!
-    x = 0, i = -1; while (++i < n) {
-      x0 = x, j = -1; while (++j < n) {
-        var di = groupIndex[i],
-            dj = subgroupIndex[di][j],
-            v = matrix[di][dj],
-            a0 = x,
-            a1 = x += v * k;
-        subgroups[dj * n + di] = {
-          index: di,
-          subindex: dj,
-          startAngle: a0,
-          endAngle: a1,
-          value: v
-        };
+    x = 0;
+    i = -1;
+    while (++i < n) {
+      x0 = x;
+      j = -1;
+      while (++j < n) {
+          let subsubgroups = [];
+          for(p = 0; p < matrix[i][j].length; ++p){
+            var a0 = (matrix[i][j][p][0] * k) + x0,
+            a1 = (matrix[i][j][p][1] * k) + x0,
+            v = matrix[i][j][p][1] - matrix[i][j][p][0];
+            x += v * k;
+            subsubgroups.push({
+                index: i,
+                subindex: j,
+                startAngle: a0,
+                endAngle: a1,
+                value: v
+            });
+          }
+          subgroups.push(subsubgroups);
       }
-      groups[di] = {
-        index: di,
+      groups[i] = {
+        index: i,
         startAngle: x0,
         endAngle: x,
-        value: groupSums[di]
+        value: groupSums[i]
       };
       x += dx;
     }
 
     // Generate chords for each (non-empty) subgroup-subgroup link.
-    i = -1; while (++i < n) {
-      j = i - 1; while (++j < n) {
-        var source = subgroups[j * n + i],
-            target = subgroups[i * n + j];
-        if (source.value || target.value) {
-          chords.push(source.value < target.value
-              ? {source: target, target: source}
-              : {source: source, target: target});
+    i = -1;
+    while (++i < n) {
+      j = i - 1;
+      while (++j < n) {
+        for(p = 0; p < subgroups[j * n + i].length; ++p){
+            var source = subgroups[j * n + i][p],
+                target = subgroups[i * n + j][p];
+            if (source.value || target.value) {
+                chords.push(source.value < target.value
+                    ? {source: target, target: source}
+                    : {source: source, target: target});
+            }
         }
       }
     }
-
-    return sortChords ? chords.sort(sortChords) : chords;
+    return chords;
   }
 
   chord.padAngle = function(_) {
