@@ -10,6 +10,47 @@ function compareValue(compare) {
   };
 }
 
+export function from_object(obj) {
+    /**
+     * Generate data matrix from an array of dictionaries with:
+     *  origin, target, origin_start, origin_end, target_start, target_end
+     */
+    let n = obj.length,
+        group_idx = 0,
+        m = [],
+        groups = {},
+        i,
+        j;
+    for (i=0; i < n; ++i){
+        if (!(obj[i].origin in groups)){
+            groups[obj[i].origin] = group_idx++;
+            m.forEach(function (elem) {
+                elem.push([]);
+            });
+            let newgroup = [];
+            for(j = 0; j < group_idx; j++)
+                newgroup.push([]);
+            m.push(newgroup);
+        }
+        if (!(obj[i].target in groups)){
+            groups[obj[i].target] = group_idx++;
+            m.forEach(function (elem) {
+                elem.push([]);
+            });
+            let newgroup = [];
+            for(j = 0; j < group_idx; j++)
+                newgroup.push([]);
+            m.push(newgroup);
+        }
+        let origin_idx = groups[obj[i].origin],
+            target_idx = groups[obj[i].target];
+        m[origin_idx][target_idx].push([obj[i].origin_start, obj[i].origin_end]);
+        if (obj[i].origin !== obj[i].target)
+            m[target_idx][origin_idx].push([obj[i].target_start, obj[i].target_end]);
+    }
+    return m;
+}
+
 export default function() {
   var padAngle = 0,
       sortGroups = null,
@@ -17,7 +58,7 @@ export default function() {
       sortChords = null;
 
   function chord(matrix) {
-    var n = matrix.length,
+    let n = matrix.length,
         groupSums = [],
         chords = [],
         groups = chords.groups = new Array(n),
@@ -27,8 +68,8 @@ export default function() {
         x0,
         dx,
         i,
-        p,
-        j;
+        j,
+        p;
 
     // Compute the sum.
     k = 0, i = -1; while (++i < n) {
@@ -41,8 +82,6 @@ export default function() {
     }
 
     // Convert the sum to scaling factor for [0, 2pi].
-    // TODO Allow start and end angle to be specified?
-    // TODO Allow padding to be specified as percentage?
     k = max(0, tau - padAngle * n) / k;
     dx = k ? padAngle : tau / n;
 
@@ -54,21 +93,21 @@ export default function() {
       x0 = x;
       j = -1;
       while (++j < n) {
-          let subsubgroups = [];
-          for(p = 0; p < matrix[i][j].length; ++p){
-            var a0 = (matrix[i][j][p][0] * k) + x0,
-            a1 = (matrix[i][j][p][1] * k) + x0,
-            v = matrix[i][j][p][1] - matrix[i][j][p][0];
-            x += v * k;
-            subsubgroups.push({
-                index: i,
-                subindex: j,
-                startAngle: a0,
-                endAngle: a1,
-                value: v
-            });
-          }
-          subgroups.push(subsubgroups);
+        let subsubgroups = [];
+        for(p = 0; p < matrix[i][j].length; ++p){
+          let a0 = (matrix[i][j][p][0] * k) + x0,
+          a1 = (matrix[i][j][p][1] * k) + x0,
+          v = matrix[i][j][p][1] - matrix[i][j][p][0];
+          x += v * k;
+          subsubgroups.push({
+            index: i,
+            subindex: j,
+            startAngle: a0,
+            endAngle: a1,
+            value: v
+          });
+        }
+        subgroups.push(subsubgroups);
       }
       groups[i] = {
         index: i,
@@ -85,13 +124,11 @@ export default function() {
       j = i - 1;
       while (++j < n) {
         for(p = 0; p < subgroups[j * n + i].length; ++p){
-            var source = subgroups[j * n + i][p],
-                target = subgroups[i * n + j][p];
-            if (source.value || target.value) {
-                chords.push(source.value < target.value
-                    ? {source: target, target: source}
-                    : {source: source, target: target});
-            }
+          let source = subgroups[j * n + i][p],
+              target = subgroups[i * n + j][p];
+          if (source.value || target.value) {
+            chords.push({source: source, target: target});
+          }
         }
       }
     }
