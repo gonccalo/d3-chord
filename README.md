@@ -1,8 +1,9 @@
 # d3-chord
 
 Visualize relationships or network flow with an aesthetically-pleasing circular layout.
-
-[<img alt="Chord Diagram" src="https://raw.githubusercontent.com/d3/d3-chord/master/img/chord.png" width="480" height="480">](http://bl.ocks.org/mbostock/4062006)
+<p float="left">
+<img alt="Chord Diagram" src="https://raw.githubusercontent.com/gonccalo/d3-chord/master/img/chord0.png" width="420" height="420"/> <img alt="Chord Diagram" src="https://raw.githubusercontent.com/gonccalo/d3-chord/master/img/chord1.png" width="420" height="420"/>
+</p>
 
 ## Installing
 
@@ -21,11 +22,11 @@ var chord = d3.chord();
 
 ## API Reference
 
-<a href="#chord" name="chord">#</a> d3.<b>chord</b>() [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js "Source")
+<a href="#chord" name="chord">#</a> d3.<b>chord</b>() [<>](https://github.com/gonccalo/d3-chord/blob/master/src/chord.js "Source")
 
 Constructs a new chord layout with the default settings.
 
-<a href="#_chord" name="_chord">#</a> <i>chord</i>(<i>object, meta</i>) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L19 "Source")
+<a href="#_chord" name="_chord">#</a> <i>chord</i>(<i>object, meta</i>) [<>](https://github.com/gonccalo/d3-chord/blob/master/src/chord.js#L110 "Source")
 
 Computes the chord layout for the specified *object*, where the *object* represents the directed connections between the different groups specified in *meta*. The given *object* must be an array, where each element *object*[*i*] is an object with *origin*, *target*, *origin_start*, *origin_end*, *target_start*, *target_end*, where each *object*.*origin* represents the name of the origin group, *object*.*target* is the name of the target group. *origin_start*, *origin_end* represent the start and end of this connection in the origin node, *target_start*, *target_end* are the start and end of this connection in the target node. The start and end must be contained in size of the node. Example:
 
@@ -80,11 +81,11 @@ The *chords* array also defines a secondary array of length *n*, *chords*.groups
 
 The groups are typically passed to [d3.arc](https://github.com/d3/d3-shape#arc) to produce a donut chart around the circumference of the chord layout.
 
-<a href="#chord_padAngle" name="#chord_padAngle">#</a> <i>chord</i>.<b>padAngle</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L104 "Source")
+<a href="#chord_padAngle" name="#chord_padAngle">#</a> <i>chord</i>.<b>padAngle</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L166 "Source")
 
 If *angle* is specified, sets the pad angle between adjacent groups to the specified number in radians and returns this chord layout. If *angle* is not specified, returns the current pad angle, which defaults to zero.
 
-<a href="#chord_sortGroups" name="#chord_sortGroups">#</a> <i>chord</i>.<b>sortGroups</b>([<i>compare</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L108 "Source")
+<a href="#chord_sortGroups" name="#chord_sortGroups">#</a> <i>chord</i>.<b>sortGroups</b>([<i>compare</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L170 "Source")
 
 If *compare* is specified, sets the group comparator to the specified function or null and returns this chord layout. If *compare* is not specified, returns the current group comparator, which defaults to null. If the group comparator is non-null, it is used to sort the groups by their total outflow. See also [d3.ascending](https://github.com/d3/d3-array#ascending) and [d3.descending](https://github.com/d3/d3-array#descending).
 
