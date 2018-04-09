@@ -19,28 +19,44 @@ var chord = d3.chord();
 </script>
 ```
 
-[Try d3-chord in your browser.](https://tonicdev.com/npm/d3-chord)
-
 ## API Reference
 
 <a href="#chord" name="chord">#</a> d3.<b>chord</b>() [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js "Source")
 
 Constructs a new chord layout with the default settings.
 
-<a href="#_chord" name="_chord">#</a> <i>chord</i>(<i>matrix</i>) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L19 "Source")
+<a href="#_chord" name="_chord">#</a> <i>chord</i>(<i>object, meta</i>) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L19 "Source")
 
-Computes the chord layout for the specified square *matrix* of size *n*×*n*, where the *matrix* represents the directed flow amongst a network (a complete digraph) of *n* nodes. The given *matrix* must be an array of length *n*, where each element *matrix*[*i*] is an array of *n* numbers, where each *matrix*[*i*][*j*] represents the flow from the *i*th node in the network to the *j*th node. Each number *matrix*[*i*][*j*] must be nonnegative, though it can be zero if there is no flow from node *i* to node *j*. From the [Circos tableviewer example](http://mkweb.bcgsc.ca/circos/guide/tables/):
+Computes the chord layout for the specified *object*, where the *object* represents the directed connections between the different groups specified in *meta*. The given *object* must be an array, where each element *object*[*i*] is an object with *origin*, *target*, *origin_start*, *origin_end*, *target_start*, *target_end*, where each *object*.*origin* represents the name of the origin group, *object*.*target* is the name of the target group. *origin_start*, *origin_end* represent the start and end of this connection in the origin node, *target_start*, *target_end* are the start and end of this connection in the target node. The start and end must be contained in size of the node. Example:
 
 ```js
-var matrix = [
-  [11975,  5871, 8916, 2868],
-  [ 1951, 10048, 2060, 6171],
-  [ 8010, 16145, 8090, 8045],
-  [ 1013,   990,  940, 6907]
+var object = [
+    {origin: "tig00007144", target: "chr03", origin_start:  113, origin_end:  824, target_start: 332034, target_end: 333111},
+    {origin: "tig00026480", target: "chr03", origin_start:  500, origin_end: 1387, target_start: 348621, target_end: 349199},
+    {origin: "tig00003221", target: "chr03", origin_start: 2916, origin_end: 3961, target_start: 212786, target_end: 214087},
+    {origin: "tig00010111", target: "chr03", origin_start:  218, origin_end:  989, target_start: 230067, target_end: 231135},
+    {origin: "tig00000318", target: "chr03", origin_start:    1, origin_end:  244, target_start: 256211, target_end: 296393},
+    {origin: "tig00009327", target: "chr03", origin_start:  878, origin_end: 1878, target_start: 141515, target_end: 161602},
+    {origin: "tig00025208", target: "chr03", origin_start:  878, origin_end: 2000, target_start: 100069, target_end: 150203},
+    {origin: "tig00019172", target: "chr03", origin_start:  720, origin_end: 1583, target_start:   1066, target_end:   9500},
+    {origin: "tig00004923", target: "chr03", origin_start: 1154, origin_end: 1849, target_start: 100531, target_end: 161598}
 ];
+
+var meta = [
+    {name: "tig00007144", size: 1000},
+    {name: "tig00026480", size: 2000},
+    {name: "tig00003221", size: 4000},
+    {name: "tig00010111", size: 2000},
+    {name: "tig00000318", size: 2000},
+    {name: "tig00009327", size: 2000},
+    {name: "tig00025208", size: 2000},
+    {name: "tig00019172", size: 2000},
+    {name: "tig00004923", size: 2000},
+    {name: "chr03"      , size: 350204}
+]
 ```
 
-The return value of *chord*(*matrix*) is an array of *chords*, where each chord represents the combined bidirectional flow between two nodes *i* and *j* (where *i* may be equal to *j*) and is an object with the following properties:
+The return value of *chord*(*object*, *meta*) is an array of *chords*, where each chord represents the combined bidirectional flow between two nodes *i* and *j* (where *i* may be equal to *j*) and is an object with the following properties:
 
 * `source` - the source subgroup
 * `target` - the target subgroup
@@ -49,7 +65,7 @@ Each source and target subgroup is also an object with the following properties:
 
 * `startAngle` - the start angle in radians
 * `endAngle` - the end angle in radians
-* `value` - the flow value *matrix*[*i*][*j*]
+* `value` - the flow value
 * `index` - the node index *i*
 * `subindex` - the node index *j*
 
@@ -71,14 +87,6 @@ If *angle* is specified, sets the pad angle between adjacent groups to the speci
 <a href="#chord_sortGroups" name="#chord_sortGroups">#</a> <i>chord</i>.<b>sortGroups</b>([<i>compare</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L108 "Source")
 
 If *compare* is specified, sets the group comparator to the specified function or null and returns this chord layout. If *compare* is not specified, returns the current group comparator, which defaults to null. If the group comparator is non-null, it is used to sort the groups by their total outflow. See also [d3.ascending](https://github.com/d3/d3-array#ascending) and [d3.descending](https://github.com/d3/d3-array#descending).
-
-<a href="#chord_sortSubgroups" name="#chord_sortSubgroups">#</a> <i>chord</i>.<b>sortSubgroups</b>([<i>compare</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L112 "Source")
-
-If *compare* is specified, sets the subgroup comparator to the specified function or null and returns this chord layout. If *compare* is not specified, returns the current subgroup comparator, which defaults to null. If the subgroup comparator is non-null, it is used to sort the subgroups corresponding to *matrix*[*i*][0 … *n* - 1] for a given group *i* by their total outflow. See also [d3.ascending](https://github.com/d3/d3-array#ascending) and [d3.descending](https://github.com/d3/d3-array#descending).
-
-<a href="#chord_sortChords" name="#chord_sortChords">#</a> <i>chord</i>.<b>sortChords</b>([<i>compare</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/chord.js#L116 "Source")
-
-If *compare* is specified, sets the chord comparator to the specified function or null and returns this chord layout. If *compare* is not specified, returns the current chord comparator, which defaults to null. If the chord comparator is non-null, it is used to sort the [chords](#_chord) by their combined flow; this only affects the *z*-order of the chords. See also [d3.ascending](https://github.com/d3/d3-array#ascending) and [d3.descending](https://github.com/d3/d3-array#descending).
 
 <a href="#ribbon" name="ribbon">#</a> d3.<b>ribbon</b>() [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js "Source")
 
