@@ -1,6 +1,5 @@
-import {range} from "d3-array";
 import {max, tau} from "./math";
-
+/*
 function compareValue(compare) {
   return function(a, b) {
     return compare(
@@ -30,7 +29,7 @@ function from_object(obj, meta) {
     /**
      * Generate data matrix from an array of dictionaries with:
      *  origin, target, origin_start, origin_end, target_start, target_end
-     */
+
     let n = obj.length,
         group_idx = 0,
         m = [],
@@ -103,19 +102,18 @@ function from_object(obj, meta) {
     }
     return m;
 }
-
+*/
 export default function() {
   var padAngle = 0,
-      sortGroups = null,
-      sortSubgroups = null,
-      sortChords = null;
+      sortGroups = null;
 
   function chord(csv, meta) {
       /**
        * meta is an array of objects with name and size
        * csv is an array of objects with origin, target, origin_start, origin_end, target_start, target_end
+       * TODO: sort groups?
        */
-      let n = csv.length,
+      var n = csv.length,
           m = meta.length,
           k = 0,
           groups = {},
@@ -141,7 +139,7 @@ export default function() {
       }
 
       for (i = 0; i < n; i++){
-          let o0 = (csv[i].origin_start * k) + groups[csv[i].origin].startPos,
+          var o0 = (csv[i].origin_start * k) + groups[csv[i].origin].startPos,
               o1 = (csv[i].origin_end * k) + groups[csv[i].origin].startPos,
               t0 = (csv[i].target_start * k) + groups[csv[i].target].startPos,
               t1 = (csv[i].target_end * k) + groups[csv[i].target].startPos;
@@ -171,14 +169,6 @@ export default function() {
 
   chord.sortGroups = function(_) {
     return arguments.length ? (sortGroups = _, chord) : sortGroups;
-  };
-
-  chord.sortSubgroups = function(_) {
-    return arguments.length ? (sortSubgroups = _, chord) : sortSubgroups;
-  };
-
-  chord.sortChords = function(_) {
-    return arguments.length ? (_ == null ? sortChords = null : (sortChords = compareValue(_))._ = _, chord) : sortChords && sortChords._;
   };
 
   return chord;
