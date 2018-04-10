@@ -20,6 +20,7 @@ var chord = d3.chord();
 
 </script>
 ```
+[Live example!](https://gonccalo.github.io/d3-chord/)
 
 ## API Reference
 
