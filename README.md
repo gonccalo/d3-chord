@@ -1,18 +1,19 @@
 # d3-chord
 
 Visualize relationships or network flow with an aesthetically-pleasing circular layout.
+A fork from d3-chord that enables the user to construct chords from objects and freedom to specify a starting and ending positions for each chord. 
 <p float="left">
 <img alt="Chord Diagram" src="https://raw.githubusercontent.com/gonccalo/d3-chord/master/img/chord0.png" width="420" height="420"/> <img alt="Chord Diagram" src="https://raw.githubusercontent.com/gonccalo/d3-chord/master/img/chord1.png" width="420" height="420"/>
 </p>
 
 ## Installing
 
-If you use NPM, `npm install d3-chord`. Otherwise, download the [latest release](https://github.com/d3/d3-chord/releases/latest). You can also load directly from [d3js.org](https://d3js.org), either as a [standalone library](https://d3js.org/d3-chord.v1.min.js) or as part of [D3 4.0](https://github.com/d3/d3). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3` global is exported:
+If you use NPM, `npm install d3-chord`. Otherwise, download the [latest release](https://github.com/d3/d3-chord/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3` global is exported:
 
 ```html
 <script src="https://d3js.org/d3-array.v1.min.js"></script>
 <script src="https://d3js.org/d3-path.v1.min.js"></script>
-<script src="https://d3js.org/d3-chord.v1.min.js"></script>
+<script src="d3-chord.v1.min.js"></script>
 <script>
 
 var chord = d3.chord();
@@ -70,13 +71,13 @@ Each source and target subgroup is also an object with the following properties:
 * `index` - the node index *i*
 * `subindex` - the node index *j*
 
-The chords are typically passed to [d3.ribbon](#ribbon) to display the network relationships. The returned array includes only chord objects for which the value *matrix*[*i*][*j*] or *matrix*[*j*][*i*] is non-zero. Furthermore, the returned array only contains unique chords: a given chord *ij* represents the bidirectional flow from *i* to *j* *and* from *j* to *i*, and does not contain a duplicate chord *ji*; *i* and *j* are chosen such that the chord’s source always represents the larger of *matrix*[*i*][*j*] and *matrix*[*j*][*i*]. In other words, *chord*.source.index equals *chord*.target.subindex, *chord*.source.subindex equals *chord*.target.index, *chord*.source.value is greater than or equal to *chord*.target.value, and *chord*.source.value is always greater than zero.
+The chords are typically passed to [d3.ribbon](#ribbon) to display the network relationships. The returned array includes only chord objects for which the value is non-zero.  In other words, *chord*.source.index equals *chord*.target.subindex, *chord*.source.subindex equals *chord*.target.index, *chord*.source.value and *chord*.target.value can be different, and are always greater than zero.
 
-The *chords* array also defines a secondary array of length *n*, *chords*.groups, where each group represents the combined outflow for node *i*, corresponding to the elements *matrix*[*i*][0 … *n* - 1], and is an object with the following properties:
+The *chords* array also defines a secondary array of length *n*, *chords*.groups, where each group is an object with the following properties:
 
 * `startAngle` - the start angle in radians
 * `endAngle` - the end angle in radians
-* `value` - the total outgoing flow value for node *i*
+* `value` - the total size for node *i*
 * `index` - the node index *i*
 
 The groups are typically passed to [d3.arc](https://github.com/d3/d3-shape#arc) to produce a donut chart around the circumference of the chord layout.
@@ -89,11 +90,11 @@ If *angle* is specified, sets the pad angle between adjacent groups to the speci
 
 If *compare* is specified, sets the group comparator to the specified function or null and returns this chord layout. If *compare* is not specified, returns the current group comparator, which defaults to null. If the group comparator is non-null, it is used to sort the groups by their total outflow. See also [d3.ascending](https://github.com/d3/d3-array#ascending) and [d3.descending](https://github.com/d3/d3-array#descending).
 
-<a href="#ribbon" name="ribbon">#</a> d3.<b>ribbon</b>() [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js "Source")
+<a href="#ribbon" name="ribbon">#</a> d3.<b>ribbon</b>() [<>](https://github.com/gonccalo/d3-chord/blob/master/src/ribbon.js "Source")
 
 Creates a new ribbon generator with the default settings.
 
-<a href="#_ribbon" name="_ribbon">#</a> <i>ribbon</i>(<i>arguments…</i>) [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js#L34 "Source")
+<a href="#_ribbon" name="_ribbon">#</a> <i>ribbon</i>(<i>arguments…</i>) [<>](https://github.com/gonccalo/d3-chord/blob/master/src/ribbon.js#L34 "Source")
 
 Generates a ribbon for the given *arguments*. The *arguments* are arbitrary; they are simply propagated to the ribbon generator’s accessor functions along with the `this` object. For example, with the default settings, a [chord object](#_chord) expected:
 
@@ -120,7 +121,7 @@ ribbon({
 
 If the ribbon generator has a context, then the ribbon is rendered to this context as a sequence of path method calls and this function returns void. Otherwise, a path data string is returned.
 
-<a href="#ribbon_source" name="ribbon_source">#</a> <i>ribbon</i>.<b>source</b>([<i>source</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js#L74 "Source")
+<a href="#ribbon_source" name="ribbon_source">#</a> <i>ribbon</i>.<b>source</b>([<i>source</i>]) [<>](https://github.com/gonccalo/d3-chord/blob/master/src/ribbon.js#L74 "Source")
 
 If *source* is specified, sets the source accessor to the specified function and returns this ribbon generator. If *source* is not specified, returns the current source accessor, which defaults to:
 
@@ -130,7 +131,7 @@ function source(d) {
 }
 ```
 
-<a href="#ribbon_target" name="ribbon_target">#</a> <i>ribbon</i>.<b>target</b>([<i>target</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js#L78 "Source")
+<a href="#ribbon_target" name="ribbon_target">#</a> <i>ribbon</i>.<b>target</b>([<i>target</i>]) [<>](https://github.com/gonccalo/d3-chord/blob/master/src/ribbon.js#L78 "Source")
 
 If *target* is specified, sets the target accessor to the specified function and returns this ribbon generator. If *target* is not specified, returns the current target accessor, which defaults to:
 
@@ -140,7 +141,7 @@ function target(d) {
 }
 ```
 
-<a href="#ribbon_radius" name="ribbon_radius">#</a> <i>ribbon</i>.<b>radius</b>([<i>radius</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js#L62 "Source")
+<a href="#ribbon_radius" name="ribbon_radius">#</a> <i>ribbon</i>.<b>radius</b>([<i>radius</i>]) [<>](https://github.com/gonccalo/d3-chord/blob/master/src/ribbon.js#L62 "Source")
 
 If *radius* is specified, sets the radius accessor to the specified function and returns this ribbon generator. If *radius* is not specified, returns the current radius accessor, which defaults to:
 
@@ -150,7 +151,7 @@ function radius(d) {
 }
 ```
 
-<a href="#ribbon_startAngle" name="ribbon_startAngle">#</a> <i>ribbon</i>.<b>startAngle</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js#L66 "Source")
+<a href="#ribbon_startAngle" name="ribbon_startAngle">#</a> <i>ribbon</i>.<b>startAngle</b>([<i>angle</i>]) [<>](https://github.com/gonccalo/d3-chord/blob/master/src/ribbon.js#L66 "Source")
 
 If *angle* is specified, sets the start angle accessor to the specified function and returns this ribbon generator. If *angle* is not specified, returns the current start angle accessor, which defaults to:
 
@@ -162,7 +163,7 @@ function startAngle(d) {
 
 The *angle* is specified in radians, with 0 at -*y* (12 o’clock) and positive angles proceeding clockwise.
 
-<a href="#ribbon_endAngle" name="ribbon_endAngle">#</a> <i>ribbon</i>.<b>endAngle</b>([<i>angle</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js#L70 "Source")
+<a href="#ribbon_endAngle" name="ribbon_endAngle">#</a> <i>ribbon</i>.<b>endAngle</b>([<i>angle</i>]) [<>](https://github.com/gonccalo/d3-chord/blob/master/src/ribbon.js#L70 "Source")
 
 If *angle* is specified, sets the end angle accessor to the specified function and returns this ribbon generator. If *angle* is not specified, returns the current end angle accessor, which defaults to:
 
@@ -174,6 +175,6 @@ function endAngle(d) {
 
 The *angle* is specified in radians, with 0 at -*y* (12 o’clock) and positive angles proceeding clockwise.
 
-<a href="#ribbon_context" name="ribbon_context">#</a> <i>ribbon</i>.<b>context</b>([<i>context</i>]) [<>](https://github.com/d3/d3-chord/blob/master/src/ribbon.js#L82 "Source")
+<a href="#ribbon_context" name="ribbon_context">#</a> <i>ribbon</i>.<b>context</b>([<i>context</i>]) [<>](https://github.com/gonccalo/d3-chord/blob/master/src/ribbon.js#L82 "Source")
 
 If *context* is specified, sets the context and returns this ribbon generator. If *context* is not specified, returns the current context, which defaults to null. If the context is not null, then the [generated ribbon](#_ribbon) is rendered to this context as a sequence of [path method](http://www.w3.org/TR/2dcontext/#canvaspathmethods) calls. Otherwise, a [path data](http://www.w3.org/TR/SVG/paths.html#PathData) string representing the generated ribbon is returned. See also [d3-path](https://github.com/d3/d3-path).

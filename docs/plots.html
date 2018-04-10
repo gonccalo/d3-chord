@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plots</title>
+    <style>
+        body {
+            font-family: 'Rosario', sans-serif;
+        }
+        .pageTitle {
+            margin-bottom: 4%;
+            margin-left: 10%;
+        }
+        .data {
+            margin-top: 3%;
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-bottom: 3%;
+        }
+        svg {
+            display: block;
+            margin: auto;
+        }
+        #circle circle {
+            fill: none;
+            pointer-events: all;
+        }
+        .group path {
+            fill-opacity: .5;
+        }
+        path.chord {
+            stroke: #000;
+            stroke-width: .25px;
+        }
+        #circle:hover path.fade {
+            display: none;
+        }
+        .group-tick line {
+            stroke: #000;
+        }
+        .group-tick text {
+            font-size: small;
+        }
+    </style>
+    <script src="https://d3js.org/d3-path.v1.min.js"></script>
+    <script src="https://d3js.org/d3-format.v1.min.js"></script>
+    <script src="https://d3js.org/d3-shape.v1.min.js"></script>
+    <script src="https://d3js.org/d3-selection.v1.min.js"></script>
+    <script src="https://d3js.org/d3-array.v1.min.js"></script>
+    <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+    <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+    <script src="d3-chord.js"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+</head>
+<body>
+<div class="pageTitle">
+    <h1>Examples:</h1>
+</div>
+<div class="content">
+    <div class="plot"></div>
+    <div class="data">
+        <h2>Data: </h2>
+        <pre class="prettyprint lang-js" style="display: inherit">
+var object = [
+    {origin: "tig00007144", target: "chr03", origin_start:  113, origin_end:  824, target_start: 332034, target_end: 333111},
+    {origin: "tig00026480", target: "chr03", origin_start:  500, origin_end: 1387, target_start: 348621, target_end: 349199},
+    {origin: "tig00003221", target: "chr03", origin_start: 2916, origin_end: 3961, target_start: 212786, target_end: 214087},
+    {origin: "tig00010111", target: "chr03", origin_start:  218, origin_end:  989, target_start: 230067, target_end: 231135},
+    {origin: "tig00000318", target: "chr03", origin_start:    1, origin_end:  244, target_start: 256211, target_end: 296393},
+    {origin: "tig00009327", target: "chr03", origin_start:  878, origin_end: 1878, target_start: 151515, target_end: 181602},
+    {origin: "tig00025208", target: "chr03", origin_start:  878, origin_end: 2000, target_start: 100069, target_end: 150203},
+    {origin: "tig00019172", target: "chr03", origin_start:  720, origin_end: 1583, target_start:   1066, target_end:   9500},
+    {origin: "tig00004923", target: "chr03", origin_start: 1154, origin_end: 1849, target_start:  80531, target_end: 101598}
+];
+var meta = [
+    {name: "tig00007144", size: 1000},
+    {name: "tig00026480", size: 2000},
+    {name: "tig00003221", size: 4000},
+    {name: "tig00010111", size: 2000},
+    {name: "tig00000318", size: 2000},
+    {name: "tig00009327", size: 2000},
+    {name: "tig00025208", size: 2000},
+    {name: "tig00019172", size: 2000},
+    {name: "tig00004923", size: 2000},
+    {name: "chr03"      , size: 350204}
+];
+        </pre>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
